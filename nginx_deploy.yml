@@ -1,0 +1,29 @@
+---
+- name: Setup Nginx Web Servers
+  hosts: webservers
+  become: yes
+  tasks:
+  
+    - name: Update all packages to the latest
+      yum:
+        name: '*'
+        state: latest
+    
+    - name: Install Nginx
+      yum:
+        name: nginx
+        state: present
+    
+    - name: Start and enable Nginx service
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+    
+    - name: Deploy static index.html
+      copy:
+        src: ../files/index.html
+        dest: /usr/share/nginx/html/index.html
+        owner: nginx
+        group: nginx
+        mode: '0644'
